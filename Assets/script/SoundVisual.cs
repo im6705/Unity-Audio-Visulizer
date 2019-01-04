@@ -19,7 +19,6 @@ public class SoundVisual : MonoBehaviour
     [Header("Value")]
     public float rmsValue;
     public float dbValue;
-    public float pitchValue;
 
     [Header("Bass Setup")]
     public GameObject CirclePlane;
@@ -250,24 +249,5 @@ public class SoundVisual : MonoBehaviour
         //get sound spectrum
         source.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
 
-        //pitch (MAYBE NOT USE)
-        float maxV = 0;
-        var maxN = 0;
-        for (i = 0; i < SAMPLE_SIZE; i++)
-        {
-            if (!(spectrum[i] < maxV) || !(spectrum[i] > 0.0f))
-                continue;
-            maxV = spectrum[i];
-            maxN = i;
-        }
-
-        float freqN = maxN;
-        if (maxN > 0 && maxN < SAMPLE_SIZE - 1)
-        {
-            var dL = spectrum[maxN - 1] / spectrum[maxN];
-            var dR = spectrum[maxN + 1] / spectrum[maxN];
-            freqN += 0.5f * (dR * dR - dL * dL);
-        }
-        pitchValue = freqN * (sampleRate / 2) / SAMPLE_SIZE;
     }
 }
