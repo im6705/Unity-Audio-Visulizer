@@ -17,11 +17,10 @@ Please make sure to update tests as appropriate.
 I love any question 
 if you need help just call me at discord
 
-```
 𝙇𝙪𝙣𝙖#0001
 or 
 join this server : [https://discord.gg/D3bDZXa](https://discord.gg/D3bDZXa)
-```
+
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
