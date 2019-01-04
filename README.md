@@ -14,7 +14,7 @@ Please make sure to update tests as appropriate.
 
 ## I Need Help!
 
-I love any question 
+I love any question, 
 if you need help just call me at discord
 
 𝙇𝙪𝙣𝙖#0001
