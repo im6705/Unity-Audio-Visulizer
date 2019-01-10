@@ -12,7 +12,7 @@ public class SoundVisual : MonoBehaviour
     public bool DebugMode = false;
 
     [Header("Highlight Particle")]
-    public GameObject High = null;
+    public GameObject High = null; // Game Object need it?
     public float HighStartTime = 0.0f;
     public float HighEndTime = 0.0f;
 
