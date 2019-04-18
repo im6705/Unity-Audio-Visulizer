@@ -167,10 +167,8 @@ public class SoundVisual : MonoBehaviour
             //CirclePlane.transform.localScale = Vector3.Lerp(newscale, oldscale, smoothSpeed); ;
             CirclePlane.transform.position = Vector3.Lerp(nowPOS, oldpos, smoothSpeed);
             //Debug.Log("less then Min Value");
-        }
-        
+        } 
     }
-
     private void HighlightRain()
     {
         bool chk = false;
@@ -184,7 +182,6 @@ public class SoundVisual : MonoBehaviour
             High.SetActive(false);
         }
     }
-
     private void UpdateVisual()
     {
         int visualIndex = 0;
@@ -221,9 +218,7 @@ public class SoundVisual : MonoBehaviour
             backgroundIntensity = dbValue / 40;
 
         backgroundMaterial.color = Color.Lerp(maxColor, minColor, backgroundIntensity);
-
     }
-
     private void AnalyzeSound()
     {
         source.GetOutputData(samples, 0);
@@ -234,7 +229,6 @@ public class SoundVisual : MonoBehaviour
         for (; i < SAMPLE_SIZE; i++)
         {
             sum += samples[i] * samples[i];
-
         }
         rmsValue = Mathf.Sqrt(sum / SAMPLE_SIZE);
 
@@ -243,6 +237,5 @@ public class SoundVisual : MonoBehaviour
 
         //get sound spectrum
         source.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
-
     }
 }
