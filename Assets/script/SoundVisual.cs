@@ -68,9 +68,7 @@ public class SoundVisual : MonoBehaviour
             if (DebugMode)
                 _Logger(0, "SpawnLine Done");
         }
-
     }
-
     private void SpawnLine()
     {
         visualScale = new float[amnVisual];
@@ -126,7 +124,6 @@ public class SoundVisual : MonoBehaviour
         }
         //Debug.Log(Time.timeSinceLevelLoad);
     }
-
     private void _Logger(int Log,string LogMsg)
     {
         switch(Log)
@@ -140,9 +137,7 @@ public class SoundVisual : MonoBehaviour
             case 2:
                 Debug.LogError(LogMsg);
                 break;
-       
         }
-        
     }
     private void SpawnCirclePlane()
     {
