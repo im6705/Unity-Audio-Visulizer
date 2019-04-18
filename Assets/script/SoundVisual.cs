@@ -163,7 +163,6 @@ public class SoundVisual : MonoBehaviour
         }
         if (CirclePlane.transform.position.z > -0.4f || CirclePlane.transform.position.z < -25.0f)
         {
-            
             //CirclePlane.transform.localScale = Vector3.Lerp(newscale, oldscale, smoothSpeed); ;
             CirclePlane.transform.position = Vector3.Lerp(nowPOS, oldpos, smoothSpeed);
             //Debug.Log("less then Min Value");
