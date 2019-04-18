@@ -2,6 +2,7 @@
 # Info
 
 This Script is Audio Visulizer For unity 2018
+[![CodeFactor](https://www.codefactor.io/repository/github/im6705/Unity-Audio-Visulizer/badge?style=for-the-badge)](https://www.codefactor.io/repository/github/im6705/Unity-Audio-Visulizer)
 
 ## Usage
 
