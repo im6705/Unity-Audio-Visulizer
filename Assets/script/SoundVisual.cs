@@ -207,7 +207,6 @@ public class SoundVisual : MonoBehaviour
 
             visualList[visualIndex].localScale = Vector3.one + Vector3.up * visualScale[visualIndex];
             visualIndex++;
-            
         }
     }
     private void UpdateBackground()
