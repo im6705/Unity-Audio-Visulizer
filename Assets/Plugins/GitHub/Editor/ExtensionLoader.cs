@@ -22,7 +22,6 @@ namespace GitHub.Unity
                 Save(true);
             }
         }
-
         private static bool inSourceMode = false;
         private const string sourceModePath = "Assets/Editor/build/";
         private const string realPath = "Assets/Plugins/GitHub/Editor/";
@@ -38,7 +37,6 @@ namespace GitHub.Unity
             }
             EditorApplication.update += Initialize;
         }
-
         private static void Initialize()
         {
             EditorApplication.update -= Initialize;
@@ -53,9 +51,7 @@ namespace GitHub.Unity
                 //ExtensionLoader.instance.Initialized = true;
                 AssetDatabase.SaveAssets();
             }
-
         }
-
         private static void ToggleAssemblies()
         {
             var path = inSourceMode ? sourceModePath : realPath;
@@ -67,7 +63,6 @@ namespace GitHub.Unity
             ToggleAssemblies(path, assemblies20, true);
 #endif
         }
-
         private static void ToggleAssemblies(string path, string[] assemblies, bool enable)
         {
             foreach (var file in assemblies)
