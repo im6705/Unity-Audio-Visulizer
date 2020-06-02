@@ -6,7 +6,7 @@ This Script is Audio Visulizer For unity 2018
 
 ## Usage
 
-Just put in to MainCamera
+just drag&drop
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
