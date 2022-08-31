@@ -9,7 +9,6 @@ public class SoundVisual : MonoBehaviour
     [Header("Basic Setup")]
     public bool IsCircle = true;
     public bool TurnOnHighlightParticle = false;
-    public bool DebugMode = false;
 
     [Header("Highlight Particle")]
     public GameObject High = null; // Game Object need it?
@@ -48,45 +47,45 @@ public class SoundVisual : MonoBehaviour
     private float[] visualScale;
     public int amnVisual = 100;
 
+    private void SpawnManager();
+    private void SpawnLine();
+    private void SpawnCircle();
+    private void UpdateManager();
+    private void AnalyzeSound();
+    private void UpdateBackground();
+    private void UpdateVisual();  
+
     private void Start()
     {
         source = GetComponent<AudioSource>();
         samples = new float[1024];
         spectrum = new float[1024];
         sampleRate = AudioSettings.outputSampleRate;
-
-        if (IsCircle)
-        {
-            SpawnCircle();
-            SpawnCirclePlane();
-            if (DebugMode)
-                _Logger(0, "SpawnCircle, SpawnCirclePlane Done");
-        }
-        else
-        {
-            SpawnLine();
-            if (DebugMode)
-                _Logger(0, "SpawnLine Done");
-        }
+        SpawnManager();   
     }
-    private void SpawnLine()
+    
+    private void Update()
     {
-        visualScale = new float[amnVisual];
-        visualList = new Transform[amnVisual];
-
-        for (int i = 0; i < amnVisual; i++)
-        {
-            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube) as GameObject;
-            visualList[i] = go.transform;
-            visualList[i].position = Vector3.right * i;
-        }
+        UpdateManager();
     }
+
+    private void SpawnManager()
+    {
+        if(IsCircle)
+            SpawnCircle();
+        else
+            SpawnLine();
+
+    }
+
     private void SpawnCircle()
     {
         visualScale = new float[amnVisual];
         visualList = new Transform[amnVisual];
 
         Vector3 center = Vector3.zero;
+        CirclePlane.transform.position = new Vector3(0, 0, -0.4f);
+        CirclePlane.transform.localScale = new Vector3(20, 20, 1);
         float radius = 10.0f;
 
         for (int i = 0; i < amnVisual; i++)
@@ -104,7 +103,21 @@ public class SoundVisual : MonoBehaviour
             visualList[i] = go.transform;
         }
     }
-    private void Update()
+
+    private void SpawnLine()
+    {
+        visualScale = new float[amnVisual];
+        visualList = new Transform[amnVisual];
+
+        for (int i = 0; i < amnVisual; i++)
+        {
+            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube) as GameObject;
+            visualList[i] = go.transform;
+            visualList[i].position = Vector3.right * i;
+        }
+    }
+
+    private void UpdateManager()
     {
         AnalyzeSound();
         UpdateBackground();
@@ -117,70 +130,28 @@ public class SoundVisual : MonoBehaviour
         {
             CirclePlaneBassKick();
         }
-        else
-        {
-            _Logger(2, "undefined Error"); // never see this error lol :) 
-            // Just How to Use _Logger Example
-        }
-        //Debug.Log(Time.timeSinceLevelLoad);
     }
-    private void _Logger(int Log,string LogMsg)
+
+    private void AnalyzeSound()
     {
-        switch(Log)
+        source.GetOutputData(samples, 0);
+
+        //Get the RMS(root mean square)
+        int i = 0;
+        float sum = 0;
+        for (; i < SAMPLE_SIZE; i++)
         {
-            case 0:
-                Debug.Log(LogMsg);
-                break;
-            case 1:
-                Debug.LogWarning(LogMsg);
-                break;
-            case 2:
-                Debug.LogError(LogMsg);
-                break;
+            sum += samples[i] * samples[i];
         }
+        rmsValue = Mathf.Sqrt(sum / SAMPLE_SIZE);
+
+        //get DB value
+        dbValue = 20 * Mathf.Log10(rmsValue / 0.1f);
+
+        //get sound spectrum
+        source.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
     }
-    private void SpawnCirclePlane()
-    {
-        Vector3 center = Vector3.zero;
-        
-        CirclePlane.transform.position = new Vector3(0, 0, -0.4f);
-        CirclePlane.transform.localScale = new Vector3(20, 20, 1);
-    }
-    private void CirclePlaneBassKick()
-    {
-        Vector3 oldpos = new Vector3(0, 0, -0.4f);
-        Vector3 newpos = new Vector3(0, 0, dbValue * -CircleBassPercentage + CircleBassControl);
-        Vector3 nowPOS = CirclePlane.transform.position;
-        if (dbValue > BassMin)
-        {
-            //CirclePlane.transform.localScale = Vector3.Lerp(oldscale, newscale, smoothSpeed + dbValue);
-            CirclePlane.transform.position = Vector3.Lerp(oldpos, newpos, 1);
-            //Debug.Log("Beat!");
-        }
-        else if (dbValue < BassMin)
-        {
-            CirclePlane.transform.position = Vector3.Lerp(nowPOS, oldpos, 0.5f);
-        }
-        if (CirclePlane.transform.position.z > -0.4f || CirclePlane.transform.position.z < -25.0f)
-        {
-            //CirclePlane.transform.localScale = Vector3.Lerp(newscale, oldscale, smoothSpeed); ;
-            CirclePlane.transform.position = Vector3.Lerp(nowPOS, oldpos, smoothSpeed);
-            //Debug.Log("less then Min Value");
-        } 
-    }
-    private void HighlightRain()
-    {
-        bool chk = false;
-        if (HighStartTime < Time.timeSinceLevelLoad && chk != true)
-        {
-            High.SetActive(true);
-            chk = true;
-        }
-        if (HighEndTime < Time.timeSinceLevelLoad)
-        {
-            High.SetActive(false);
-        }
-    }
+
     private void UpdateVisual()
     {
         int visualIndex = 0;
@@ -209,6 +180,7 @@ public class SoundVisual : MonoBehaviour
             visualIndex++;
         }
     }
+
     private void UpdateBackground()
     {
         backgroundIntensity -= Time.deltaTime * smoothSpeed;
@@ -217,23 +189,37 @@ public class SoundVisual : MonoBehaviour
 
         backgroundMaterial.color = Color.Lerp(maxColor, minColor, backgroundIntensity);
     }
-    private void AnalyzeSound()
+
+    private void HighlightRain()
     {
-        source.GetOutputData(samples, 0);
-
-        //Get the RMS(root mean square)
-        int i = 0;
-        float sum = 0;
-        for (; i < SAMPLE_SIZE; i++)
+        bool chk = false;
+        if (HighStartTime < Time.timeSinceLevelLoad && chk != true)
         {
-            sum += samples[i] * samples[i];
+            High.SetActive(true);
+            chk = true;
         }
-        rmsValue = Mathf.Sqrt(sum / SAMPLE_SIZE);
-
-        //get DB value
-        dbValue = 20 * Mathf.Log10(rmsValue / 0.1f);
-
-        //get sound spectrum
-        source.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
+        if (HighEndTime < Time.timeSinceLevelLoad)
+        {
+            High.SetActive(false);
+        }
     }
+
+    private void CirclePlaneBassKick()
+    {
+        Vector3 oldpos = new Vector3(0, 0, -0.4f);
+        Vector3 newpos = new Vector3(0, 0, dbValue * -CircleBassPercentage + CircleBassControl);
+        Vector3 nowPOS = CirclePlane.transform.position;
+        if (dbValue > BassMin)
+        {
+            CirclePlane.transform.position = Vector3.Lerp(oldpos, newpos, 1);
+        }
+        else if (dbValue < BassMin)
+        {
+            CirclePlane.transform.position = Vector3.Lerp(nowPOS, oldpos, 0.5f);
+        }
+        if (CirclePlane.transform.position.z > -0.4f || CirclePlane.transform.position.z < -25.0f)
+        {
+            CirclePlane.transform.position = Vector3.Lerp(nowPOS, oldpos, smoothSpeed);
+        } 
+    } 
 }
