@@ -75,7 +75,6 @@ public class SoundVisual : MonoBehaviour
             SpawnCircle();
         else
             SpawnLine();
-
     }
 
     private void SpawnCircle()
@@ -93,8 +92,8 @@ public class SoundVisual : MonoBehaviour
             float ang = i * 1.0f / amnVisual;
             ang = ang * Mathf.PI * 2;
 
-            float x = center.x + Mathf.Cos(ang) * radius;
-            float y = center.y + Mathf.Sin(ang) * radius;
+            float x = center.x + (Mathf.Cos(ang) * radius);
+            float y = center.y + (Mathf.Sin(ang) * radius);
 
             Vector3 pos = center + new Vector3(x, y, 0);
             GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube) as GameObject;
@@ -176,7 +175,7 @@ public class SoundVisual : MonoBehaviour
             if (visualScale[visualIndex] > maxVisualScale)
                 visualScale[visualIndex] = maxVisualScale;
 
-            visualList[visualIndex].localScale = Vector3.one + Vector3.up * visualScale[visualIndex];
+            visualList[visualIndex].localScale = Vector3.one + (Vector3.up * visualScale[visualIndex]);
             visualIndex++;
         }
     }
@@ -207,7 +206,7 @@ public class SoundVisual : MonoBehaviour
     private void CirclePlaneBassKick()
     {
         Vector3 oldpos = new Vector3(0, 0, -0.4f);
-        Vector3 newpos = new Vector3(0, 0, dbValue * -CircleBassPercentage + CircleBassControl);
+        Vector3 newpos = new Vector3(0, 0, (dbValue * -CircleBassPercentage) + CircleBassControl);
         Vector3 nowPOS = CirclePlane.transform.position;
         if (dbValue > BassMin)
         {
